@@ -237,3 +237,6 @@
 		LOCKON_RANGING_BREAK_CHECK
 		cd++
 		CHECK_TICK
+
+/datum/component/lockon_aiming/PostTransfer(datum/new_parent)
+	return COMPONENT_INCOMPATIBLE

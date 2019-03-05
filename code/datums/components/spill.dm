@@ -2,7 +2,6 @@
 // Yes this exists purely for the spaghetti meme
 
 /datum/component/spill
-	can_transfer = TRUE
 	var/preexisting_item_flags
 
 	var/list/droptext

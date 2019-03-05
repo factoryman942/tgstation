@@ -2,10 +2,6 @@
 	var/dupe_mode = COMPONENT_DUPE_HIGHLANDER
 	var/dupe_type
 	var/datum/parent
-	//only set to true if you are able to properly transfer this component
-	//At a minimum RegisterWithParent and UnregisterFromParent should be used
-	//Make sure you also implement PostTransfer for any post transfer handling
-	var/can_transfer = FALSE
 
 /datum/component/New(datum/P, ...)
 	parent = P
@@ -158,7 +154,7 @@
 	return
 
 /datum/component/proc/PostTransfer()
-	return COMPONENT_INCOMPATIBLE //Do not support transfer by default as you must properly support it
+	return
 
 /datum/component/proc/_GetInverseTypeList(our_type = type)
 	//we can do this one simple trick
@@ -285,13 +281,10 @@
 	if(target.parent)
 		target.RemoveComponent()
 	target.parent = src
-	var/result = target.PostTransfer()
-	switch(result)
-		if(COMPONENT_INCOMPATIBLE)
-			var/c_type = target.type
-			qdel(target)
-			CRASH("Incompatible [c_type] transfer attempt to a [type]!")
-
+	if(target.PostTransfer() == COMPONENT_INCOMPATIBLE)
+		var/c_type = target.type
+		qdel(target)
+		CRASH("Incompatible [c_type] transfer attempt to a [type]!")
 	if(target == AddComponent(target))
 		target._JoinParent()
 
@@ -301,13 +294,10 @@
 		return
 	var/comps = dc[/datum/component]
 	if(islist(comps))
-		for(var/datum/component/I in comps)
-			if(I.can_transfer)
-				target.TakeComponent(I)
+		for(var/I in comps)
+			target.TakeComponent(I)
 	else
-		var/datum/component/C = comps
-		if(C.can_transfer)
-			target.TakeComponent(comps)
+		target.TakeComponent(comps)
 
 /datum/component/ui_host()
 	return parent

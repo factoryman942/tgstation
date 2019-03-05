@@ -1,5 +1,4 @@
 /datum/component/orbiter
-	can_transfer = TRUE
 	dupe_mode = COMPONENT_DUPE_UNIQUE_PASSARGS
 	var/list/orbiters
 	var/datum/callback/orbiter_spy
